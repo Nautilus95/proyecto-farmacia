@@ -2,6 +2,7 @@ from flask import Flask
 from config import Config
 from extensions import db
 from routes.medicamentos_routes import medicamentos_bp
+from routes.empleados_routes import empleados_bp
 
 
 def create_app():
@@ -11,7 +12,7 @@ def create_app():
     db.init_app(app)
     
     app.register_blueprint(medicamentos_bp)
-
+    app.register_blueprint(empleados_bp)
     return app
 
 

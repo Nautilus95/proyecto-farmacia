@@ -2,7 +2,7 @@ from flask import Blueprint, jsonify
 from controllers.empleados_controller import obtener_empleados
 
 
-empleadoss_bp = Blueprint("empleados", __name__)
+empleados_bp = Blueprint("empleados", __name__)
 
 
 @empleados_bp.route("/empleados", methods=["GET"])

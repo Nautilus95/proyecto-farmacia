@@ -1,6 +1,6 @@
-from models.empleado import empleado
+from models.empleado import Empleado
 
-def obtener_empleado():
+def obtener_empleados():
     empleados = Empleado.query.all()
 
     return empleados
