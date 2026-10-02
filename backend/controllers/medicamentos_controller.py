@@ -36,3 +36,21 @@ def crear_medicamento(nombre, precio, stock, categoria_id, fecha_ingreso):
 
 def categoria_existe(categoria_id):
     return Categoria.query.get(categoria_id) is not None
+
+# Modificar medicamento
+
+def modificar_medicamento(id, nombre, precio, stock, categoria_id, fecha_ingreso):
+    medicamento = Medicamento.query.get(id)
+
+    if medicamento is None:
+        return None
+
+    medicamento.nombre = nombre
+    medicamento.precio = precio
+    medicamento.stock = stock
+    medicamento.categoria_id = categoria_id
+    medicamento.fecha_ingreso = fecha_ingreso
+
+    db.session.commit()
+
+    return medicamento
