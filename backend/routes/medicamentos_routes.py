@@ -5,13 +5,14 @@ from controllers.medicamentos_controller import (
     obtener_medicamento_por_id,
     crear_medicamento,
     categoria_existe,
-    modificar_medicamento
+    modificar_medicamento,
+    eliminar_medicamento
     )
 
 
 medicamentos_bp = Blueprint("medicamentos", __name__)
 
-# Obtener todos los medicamentos
+# ---- Obtener todos los medicamentos ----
 
 @medicamentos_bp.route("/medicamentos", methods=["GET"])
 def listar_medicamentos():
@@ -29,7 +30,7 @@ def listar_medicamentos():
         for medicamento in medicamentos
     ])
 
-# Obtener un medicamento por su ID
+# ---- Obtener un medicamento por su ID ----
 
 @medicamentos_bp.route("/medicamentos/<int:id>", methods=["GET"])
 def obtener_medicamento(id):
@@ -47,7 +48,7 @@ def obtener_medicamento(id):
         "fecha_ingreso": medicamento.fecha_ingreso.isoformat()
     })
 
-# Crear medicamento
+# ---- Crear medicamento ----
 
 @medicamentos_bp.route("/medicamentos", methods=["POST"])
 def crear_medicamento_route():
@@ -118,7 +119,7 @@ def crear_medicamento_route():
             "error": "La fecha debe tener un formato válido: YYYY-MM-DD"
         }), 400
 
-    # Crear medicamento después de validar todo
+    # ---- Crear medicamento después de validar todo ----
 
     medicamento = crear_medicamento(
         nombre=nombre.strip(),
@@ -134,7 +135,7 @@ def crear_medicamento_route():
     }), 201
 
 
-# Modificar medicamento
+# ---- Modificar medicamento ----
 
 @medicamentos_bp.route("/medicamentos/<int:id>", methods=["PUT"])
 def modificar_medicamento_route(id):
@@ -205,7 +206,7 @@ def modificar_medicamento_route(id):
             "error": "La fecha debe tener un formato válido: YYYY-MM-DD"
         }), 400
 
-    # Modificar medicamento después de validar todo
+    # ---- Modificar medicamento después de validar todo ----
 
     medicamento = modificar_medicamento(
         id=id,
@@ -221,5 +222,20 @@ def modificar_medicamento_route(id):
 
     return jsonify({
         "mensaje": "Medicamento modificado correctamente",
+        "id": medicamento.id
+    }), 200
+
+
+# ---- Eliminar medicamento ----
+
+@medicamentos_bp.route("/medicamentos/<int:id>", methods=["DELETE"])
+def eliminar_medicamento_route(id):
+    medicamento = eliminar_medicamento(id)
+
+    if medicamento is None:
+        return jsonify({"error": "Medicamento no encontrado"}), 404
+
+    return jsonify({
+        "mensaje": "Medicamento eliminado correctamente",
         "id": medicamento.id
     }), 200

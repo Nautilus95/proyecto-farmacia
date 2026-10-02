@@ -54,3 +54,16 @@ def modificar_medicamento(id, nombre, precio, stock, categoria_id, fecha_ingreso
     db.session.commit()
 
     return medicamento
+
+# Eliminar medicamento
+
+def eliminar_medicamento(id):
+    medicamento = Medicamento.query.get(id)
+
+    if medicamento is None:
+        return None
+
+    db.session.delete(medicamento)
+    db.session.commit()
+
+    return medicamento
