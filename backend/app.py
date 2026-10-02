@@ -1,8 +1,10 @@
-from flask import Flask
+from flask import Flask, app
 from config import Config
 from extensions import db
 from routes.medicamentos_routes import medicamentos_bp
+from routes.categorias_routes import categorias_bp
 
+# Crear la aplicación Flask y registrar los blueprints de rutas
 
 def create_app():
     app = Flask(__name__)
@@ -11,6 +13,8 @@ def create_app():
     db.init_app(app)
     
     app.register_blueprint(medicamentos_bp)
+
+    app.register_blueprint(categorias_bp)
 
     return app
 
