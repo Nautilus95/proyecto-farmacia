@@ -22,7 +22,38 @@ def crear_empleado(nombre, apellido, dni, email, cargo):
     db.session.commit()
 
     return empleado
+
+#Modificar empleado
+
+def modificar_empleado(id, nombre, apellido, dni, email, cargo):
+    empleado = Empleado.query.get(id)
+
+    if empleado is None:
+        return None
+
+    empleado.nombre = nombre
+    empleado.apellido = apellido
+    empleado.dni = dni
+    empleado.email = email
+    empleado.cargo = cargo
+
+    db.session.commit()
+
+    return empleado
         
+
+#Eliminar empleado
+
+def eliminar_empleado(id):
+    empleado = Empleado.query.get(id)
+
+    if empleado is None:
+        return None
+
+    db.session.delete(empleado)
+    db.session.commit()
+
+    return empleado
 
 
 
