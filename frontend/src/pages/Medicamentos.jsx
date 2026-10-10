@@ -5,6 +5,7 @@ import {
   DialogActions,
   DialogContent,
   DialogTitle,
+  MenuItem,
   Paper,
   Table,
   TableBody,
@@ -25,6 +26,7 @@ function Medicamentos() {
   const [errorStock, setErrorStock] = useState('')
   const [errorCategoria, setErrorCategoria] = useState('')
   const [errorFecha, setErrorFecha] = useState('')
+  const [categorias, setCategorias] = useState([])
 
   const [formulario, setFormulario] = useState({
     nombre: '',
@@ -45,28 +47,36 @@ function Medicamentos() {
       })
   }
 
+  const cargarCategorias = async () => {
+    const respuesta = await fetch('http://127.0.0.1:5000/categorias')
+    const datos = await respuesta.json()
+
+    setCategorias(datos)
+  }
+
   useEffect(() => {
     cargarMedicamentos()
+    cargarCategorias()
   }, [])
 
   const abrirDialogo = () => {
-  setFormulario({
-    nombre: '',
-    precio: '',
-    stock: '',
-    categoria_id: '',
-    fecha_ingreso: '',
-  })
+    setFormulario({
+      nombre: '',
+      precio: '',
+      stock: '',
+      categoria_id: '',
+      fecha_ingreso: '',
+    })
 
-  setErrorNombre('')
-  setErrorPrecio('')
-  setErrorStock('')
-  setErrorCategoria('')
-  setErrorFecha('')
+    setErrorNombre('')
+    setErrorPrecio('')
+    setErrorStock('')
+    setErrorCategoria('')
+    setErrorFecha('')
 
-  setMedicamentoEditando(null)
-  setDialogoAbierto(true)
-}
+    setMedicamentoEditando(null)
+    setDialogoAbierto(true)
+  }
 
   const editarMedicamento = (medicamento) => {
     setMedicamentoEditando(medicamento)
@@ -83,15 +93,16 @@ function Medicamentos() {
     setDialogoAbierto(true)
   }
 
+  // Función para cerrar el diálogo y limpiar el formulario
   const cerrarDialogo = () => {
-  setDialogoAbierto(false)
+    setDialogoAbierto(false)
 
-  setErrorNombre('')
-  setErrorPrecio('')
-  setErrorStock('')
-  setErrorCategoria('')
-  setErrorFecha('')
-}
+    setErrorNombre('')
+    setErrorPrecio('')
+    setErrorStock('')
+    setErrorCategoria('')
+    setErrorFecha('')
+  }
 
   // Eliminar medicamento //
 
@@ -110,33 +121,33 @@ function Medicamentos() {
   }
 
   const manejarCambio = (evento) => {
-  const { name, value } = evento.target
+    const { name, value } = evento.target
 
-  setFormulario({
-    ...formulario,
-    [name]: value,
-  })
+    setFormulario({
+      ...formulario,
+      [name]: value,
+    })
 
-  if (name === 'nombre') {
-    setErrorNombre('')
+    if (name === 'nombre') {
+      setErrorNombre('')
+    }
+
+    if (name === 'precio') {
+      setErrorPrecio('')
+    }
+
+    if (name === 'stock') {
+      setErrorStock('')
+    }
+
+    if (name === 'categoria_id') {
+      setErrorCategoria('')
+    }
+
+    if (name === 'fecha_ingreso') {
+      setErrorFecha('')
+    }
   }
-
-  if (name === 'precio') {
-    setErrorPrecio('')
-  }
-
-  if (name === 'stock') {
-    setErrorStock('')
-  }
-
-  if (name === 'categoria_id') {
-    setErrorCategoria('')
-  }
-
-  if (name === 'fecha_ingreso') {
-    setErrorFecha('')
-  }
-}
 
   // Guardar medicamento //
 
@@ -264,7 +275,11 @@ function Medicamentos() {
                 <TableCell>{medicamento.nombre}</TableCell>
                 <TableCell>${medicamento.precio}</TableCell>
                 <TableCell>{medicamento.stock}</TableCell>
-                <TableCell>{medicamento.categoria_id}</TableCell>
+                <TableCell>{categorias.find(
+                  (categoria) =>
+                    Number(categoria.id) === Number(medicamento.categoria_id)
+                )?.nombre || 'Sin categoría'}
+                </TableCell>
                 <TableCell>{medicamento.fecha_ingreso}</TableCell>
                 <TableCell>
                   <Button
@@ -338,16 +353,22 @@ function Medicamentos() {
           />
 
           <TextField
+            select
             label="Categoría"
             name="categoria_id"
             value={formulario.categoria_id}
             onChange={manejarCambio}
-            type="number"
             fullWidth
             margin="normal"
             error={Boolean(errorCategoria)}
             helperText={errorCategoria}
-          />
+          >
+            {categorias.map((categoria) => (
+              <MenuItem key={categoria.id} value={categoria.id}>
+                {categoria.nombre}
+              </MenuItem>
+            ))}
+          </TextField>
 
           <TextField
             label="Fecha de ingreso"
