@@ -27,6 +27,10 @@ function Medicamentos() {
   const [errorCategoria, setErrorCategoria] = useState('')
   const [errorFecha, setErrorFecha] = useState('')
   const [categorias, setCategorias] = useState([])
+  const [dialogoEliminar, setDialogoEliminar] = useState({
+    abierto: false,
+    id: null,
+  })
 
   const [formulario, setFormulario] = useState({
     nombre: '',
@@ -295,7 +299,12 @@ function Medicamentos() {
                   <Button
                     variant="outlined"
                     color="error"
-                    onClick={() => eliminarMedicamento(medicamento.id)}
+                    onClick={() =>
+                      setDialogoEliminar({
+                        abierto: true,
+                        id: medicamento.id,
+                      })
+                    }
                   >
                     Eliminar
                   </Button>
@@ -306,6 +315,42 @@ function Medicamentos() {
           </TableBody>
         </Table>
       </TableContainer>
+
+      <Dialog
+        open={dialogoEliminar.abierto}
+        onClose={() =>
+          setDialogoEliminar({ abierto: false, id: null })
+        }
+      >
+        <DialogTitle>Eliminar medicamento</DialogTitle>
+
+        <DialogContent>
+          ¿Estás seguro de eliminar el medicamento?
+        </DialogContent>
+
+        <DialogActions>
+          <Button
+            onClick={() =>
+              setDialogoEliminar({ abierto: false, id: null })
+            }
+          >
+            Cancelar
+          </Button>
+
+          <Button
+            color="error"
+            variant="contained"
+            onClick={() => {
+              const id = dialogoEliminar.id
+              setDialogoEliminar({ abierto: false, id: null })
+              eliminarMedicamento(id)
+            }}
+          >
+            Eliminar
+          </Button>
+        </DialogActions>
+      </Dialog>
+
 
       <Dialog
         open={dialogoAbierto}

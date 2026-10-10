@@ -22,6 +22,10 @@ function Empleados() {
   const [dialogoAbierto, setDialogoAbierto] = useState(false)
   const [errores, setErrores] = useState({})
   const [empleadoEditando, setEmpleadoEditando] = useState(null)
+  const [dialogoEliminar, setDialogoEliminar] = useState({
+    abierto: false,
+    id: null,
+  })
 
   const [formulario, setFormulario] = useState({
     nombre: '',
@@ -58,14 +62,6 @@ function Empleados() {
   // Confirmar eliminar empleado //
 
   const eliminarEmpleado = async (id) => {
-    const confirmar = window.confirm(
-      '¿Estás seguro de eliminar empleado?'
-    )
-
-    if (!confirmar) {
-      return
-    }
-
     try {
       const respuesta = await fetch(
         `http://127.0.0.1:5000/empleados/${id}`,
@@ -231,7 +227,12 @@ function Empleados() {
                     color="error"
                     size="small"
                     sx={{ ml: 1 }}
-                    onClick={() => eliminarEmpleado(empleado.id)}
+                    onClick={() =>
+                      setDialogoEliminar({
+                        abierto: true,
+                        id: empleado.id,
+                      })
+                    }
                   >
                     Eliminar
                   </Button>
@@ -242,6 +243,42 @@ function Empleados() {
           </TableBody>
         </Table>
       </TableContainer>
+
+      <Dialog
+        open={dialogoEliminar.abierto}
+        onClose={() =>
+          setDialogoEliminar({ abierto: false, id: null })
+        }
+      >
+        <DialogTitle>Eliminar empleado</DialogTitle>
+
+        <DialogContent>
+          ¿Estás seguro de eliminar este empleado?
+        </DialogContent>
+
+        <DialogActions>
+          <Button
+            onClick={() =>
+              setDialogoEliminar({ abierto: false, id: null })
+            }
+          >
+            Cancelar
+          </Button>
+
+          <Button
+            color="error"
+            variant="contained"
+            onClick={() => {
+              const id = dialogoEliminar.id
+              setDialogoEliminar({ abierto: false, id: null })
+              eliminarEmpleado(id)
+            }}
+          >
+            Eliminar
+          </Button>
+        </DialogActions>
+      </Dialog>
+
       <Dialog
         open={dialogoAbierto}
         onClose={() => setDialogoAbierto(false)}

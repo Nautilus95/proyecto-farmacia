@@ -22,6 +22,11 @@ function Categorias() {
   const [nombre, setNombre] = useState('')
   const [categoriaEditando, setCategoriaEditando] = useState(null)
   const [error, setError] = useState('')
+  const [dialogoEliminar, setDialogoEliminar] = useState({
+    abierto: false,
+    id: null,
+  })
+
   useEffect(() => {
     fetch('http://127.0.0.1:5000/categorias')
       .then((respuesta) => respuesta.json())
@@ -77,12 +82,12 @@ function Categorias() {
     console.log('Respuesta del backend:', datos)
 
 
-      if (!respuesta.ok) {
-        setError(datos.error || 'Ocurrió un error al guardar la categoría')
-        return
-      }
+    if (!respuesta.ok) {
+      setError(datos.error || 'Ocurrió un error al guardar la categoría')
+      return
+    }
 
-      setError('')
+    setError('')
 
     if (editando) {
       setCategorias(
@@ -171,7 +176,12 @@ function Categorias() {
                   <Button
                     variant="contained"
                     color="error"
-                    onClick={() => eliminarCategoria(categoria.id)}
+                    onClick={() =>
+                      setDialogoEliminar({
+                        abierto: true,
+                        id: categoria.id,
+                      })
+                    }
                   >
                     Eliminar
                   </Button>
@@ -181,6 +191,42 @@ function Categorias() {
           </TableBody>
         </Table>
       </TableContainer>
+
+      <Dialog
+        open={dialogoEliminar.abierto}
+        onClose={() =>
+          setDialogoEliminar({ abierto: false, id: null })
+        }
+      >
+        <DialogTitle>Eliminar categoría</DialogTitle>
+
+        <DialogContent>
+          ¿Estás seguro de que querés eliminar esta categoría?
+        </DialogContent>
+
+        <DialogActions>
+          <Button
+            onClick={() =>
+              setDialogoEliminar({ abierto: false, id: null })
+            }
+          >
+            Cancelar
+          </Button>
+
+          <Button
+            color="error"
+            variant="contained"
+            onClick={async () => {
+              const id = dialogoEliminar.id
+              setDialogoEliminar({ abierto: false, id: null })
+              await eliminarCategoria(id)
+            }}
+          >
+            Eliminar
+          </Button>
+        </DialogActions>
+      </Dialog>
+
       <Dialog
         open={dialogoAbierto}
         onClose={() => setDialogoAbierto(false)}
