@@ -347,9 +347,9 @@ function Empleados() {
             helperText={errores.cargo || ''}
           >
             <MenuItem value="Farmacéutico">Farmacéutico</MenuItem>
-            <MenuItem value="Auxiliar de farmacia">Auxiliar de farmacia</MenuItem>
-            <MenuItem value="Cajero">Cajero</MenuItem>
-            <MenuItem value="Repositor">Repositor</MenuItem>
+            <MenuItem value="Vendedora">Vendedora</MenuItem>
+            <MenuItem value="Administrativa">Administrativa</MenuItem>
+            <MenuItem value="Vendedor">Vendedor</MenuItem>
           </TextField>
         </DialogContent>
 
