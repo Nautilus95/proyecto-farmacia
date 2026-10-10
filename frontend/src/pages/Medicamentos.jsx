@@ -20,6 +20,11 @@ function Medicamentos() {
   const [medicamentos, setMedicamentos] = useState([])
   const [dialogoAbierto, setDialogoAbierto] = useState(false)
   const [medicamentoEditando, setMedicamentoEditando] = useState(null)
+  const [errorNombre, setErrorNombre] = useState('')
+  const [errorPrecio, setErrorPrecio] = useState('')
+  const [errorStock, setErrorStock] = useState('')
+  const [errorCategoria, setErrorCategoria] = useState('')
+  const [errorFecha, setErrorFecha] = useState('')
 
   const [formulario, setFormulario] = useState({
     nombre: '',
@@ -28,104 +33,196 @@ function Medicamentos() {
     categoria_id: '',
     fecha_ingreso: '',
   })
-  
+
   const cargarMedicamentos = () => {
-  fetch('http://127.0.0.1:5000/medicamentos')
-    .then((respuesta) => respuesta.json())
-    .then((data) => {
-      setMedicamentos(data)
-    })
-    .catch((error) => {
-      console.error('Error al obtener los medicamentos:', error)
-    })
-}
-
-  useEffect(() => {
-  cargarMedicamentos()
-}, [])
-
-  const abrirDialogo = () => {
-    setDialogoAbierto(true)
+    fetch('http://127.0.0.1:5000/medicamentos')
+      .then((respuesta) => respuesta.json())
+      .then((data) => {
+        setMedicamentos(data)
+      })
+      .catch((error) => {
+        console.error('Error al obtener los medicamentos:', error)
+      })
   }
 
-  const editarMedicamento = (medicamento) => {
-  setMedicamentoEditando(medicamento)
-  console.log('Guardado para editar:', medicamento)
+  useEffect(() => {
+    cargarMedicamentos()
+  }, [])
 
+  const abrirDialogo = () => {
   setFormulario({
-    nombre: medicamento.nombre,
-    precio: medicamento.precio,
-    stock: medicamento.stock,
-    categoria_id: medicamento.categoria_id,
-    fecha_ingreso: medicamento.fecha_ingreso,
+    nombre: '',
+    precio: '',
+    stock: '',
+    categoria_id: '',
+    fecha_ingreso: '',
   })
 
+  setErrorNombre('')
+  setErrorPrecio('')
+  setErrorStock('')
+  setErrorCategoria('')
+  setErrorFecha('')
+
+  setMedicamentoEditando(null)
   setDialogoAbierto(true)
 }
 
-  const cerrarDialogo = () => {
-    setDialogoAbierto(false)
+  const editarMedicamento = (medicamento) => {
+    setMedicamentoEditando(medicamento)
+    console.log('Guardado para editar:', medicamento)
+
+    setFormulario({
+      nombre: medicamento.nombre,
+      precio: medicamento.precio,
+      stock: medicamento.stock,
+      categoria_id: medicamento.categoria_id,
+      fecha_ingreso: medicamento.fecha_ingreso,
+    })
+
+    setDialogoAbierto(true)
   }
 
-  const eliminarMedicamento = async (id) => {
-  const respuesta = await fetch(
-    `http://127.0.0.1:5000/medicamentos/${id}`,
-    {
-      method: 'DELETE',
-    }
-  )
+  const cerrarDialogo = () => {
+  setDialogoAbierto(false)
 
-  const datos = await respuesta.json()
-
-  console.log(datos)
-  cargarMedicamentos()
+  setErrorNombre('')
+  setErrorPrecio('')
+  setErrorStock('')
+  setErrorCategoria('')
+  setErrorFecha('')
 }
 
+  // Eliminar medicamento //
+
+  const eliminarMedicamento = async (id) => {
+    const respuesta = await fetch(
+      `http://127.0.0.1:5000/medicamentos/${id}`,
+      {
+        method: 'DELETE',
+      }
+    )
+
+    const datos = await respuesta.json()
+
+    console.log(datos)
+    cargarMedicamentos()
+  }
+
   const manejarCambio = (evento) => {
-    const { name, value } = evento.target
+  const { name, value } = evento.target
 
   setFormulario({
     ...formulario,
     [name]: value,
   })
+
+  if (name === 'nombre') {
+    setErrorNombre('')
+  }
+
+  if (name === 'precio') {
+    setErrorPrecio('')
+  }
+
+  if (name === 'stock') {
+    setErrorStock('')
+  }
+
+  if (name === 'categoria_id') {
+    setErrorCategoria('')
+  }
+
+  if (name === 'fecha_ingreso') {
+    setErrorFecha('')
+  }
 }
 
-const guardarMedicamento = async () => {
-  
-if (medicamentoEditando) {
-  const respuesta = await fetch(
-    `http://127.0.0.1:5000/medicamentos/${medicamentoEditando.id}`,
-    {
-      method: 'PUT',
+  // Guardar medicamento //
+
+  const guardarMedicamento = async () => {
+
+    // Validar nombre obligatorio //
+    if (!formulario.nombre.trim()) {
+      setErrorNombre('El nombre del medicamento es obligatorio')
+      return
+    }
+    setErrorNombre('')
+
+    //Validar precio mayor a cero //
+    if (
+      formulario.precio === '' ||
+      !Number.isFinite(Number(formulario.precio)) ||
+      Number(formulario.precio) <= 0
+    ) {
+      setErrorPrecio('El precio debe ser mayor que cero')
+      return
+    }
+
+    setErrorPrecio('')
+
+    // Validar stock mayor o igual a cero //
+    if (
+      formulario.stock === '' ||
+      !Number.isInteger(Number(formulario.stock)) ||
+      Number(formulario.stock) < 0
+    ) {
+      setErrorStock('El stock debe ser un número entero mayor o igual a cero')
+      return
+    }
+
+    setErrorStock('')
+
+    // Validar categoría obligatoria //
+    if (!formulario.categoria_id) {
+      setErrorCategoria('Seleccionar una categoría')
+      return
+    }
+
+    setErrorCategoria('')
+
+    // Validar fecha de ingreso obligatoria //
+    if (!formulario.fecha_ingreso) {
+      setErrorFecha('La fecha de ingreso es obligatoria')
+      return
+    }
+
+    setErrorFecha('')
+
+    if (medicamentoEditando) {
+      const respuesta = await fetch(
+        `http://127.0.0.1:5000/medicamentos/${medicamentoEditando.id}`,
+        {
+          method: 'PUT',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(formulario),
+        }
+      )
+
+      const datos = await respuesta.json()
+
+      console.log(datos)
+      cargarMedicamentos()
+      cerrarDialogo()
+      return
+    }
+
+    const respuesta = await fetch('http://127.0.0.1:5000/medicamentos', {
+      method: 'POST',
       headers: {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify(formulario),
-    }
-  )
+    })
 
-  const datos = await respuesta.json()
+    const datos = await respuesta.json()
 
-  console.log(datos)
-  cargarMedicamentos()
-  cerrarDialogo()
-  return
-}
-
-  const respuesta = await fetch('http://127.0.0.1:5000/medicamentos', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify(formulario),
-  })
-
-  const datos = await respuesta.json()
-
-  console.log(datos)
-  cargarMedicamentos()
-  cerrarDialogo()
-}
+    console.log(datos)
+    cargarMedicamentos()
+    cerrarDialogo()
+  }
 
   return (
     <div style={{ padding: '32px' }}>
@@ -170,12 +267,12 @@ if (medicamentoEditando) {
                 <TableCell>{medicamento.categoria_id}</TableCell>
                 <TableCell>{medicamento.fecha_ingreso}</TableCell>
                 <TableCell>
-                  <Button 
+                  <Button
                     variant="outlined"
-                    onClick={() =>{ 
-                    editarMedicamento(medicamento)
+                    onClick={() => {
+                      editarMedicamento(medicamento)
                     }}
-                    
+
                   >
                     Editar
                   </Button>
@@ -184,9 +281,9 @@ if (medicamentoEditando) {
                     variant="outlined"
                     color="error"
                     onClick={() => eliminarMedicamento(medicamento.id)}
-                    >
+                  >
                     Eliminar
-                    </Button>
+                  </Button>
 
                 </TableCell>
               </TableRow>
@@ -211,8 +308,10 @@ if (medicamentoEditando) {
             onChange={manejarCambio}
             fullWidth
             margin="normal"
+            error={Boolean(errorNombre)}
+            helperText={errorNombre}
           />
-          
+
 
           <TextField
             label="Precio"
@@ -222,6 +321,8 @@ if (medicamentoEditando) {
             type="number"
             fullWidth
             margin="normal"
+            error={Boolean(errorPrecio)}
+            helperText={errorPrecio}
           />
 
           <TextField
@@ -232,6 +333,8 @@ if (medicamentoEditando) {
             type="number"
             fullWidth
             margin="normal"
+            error={Boolean(errorStock)}
+            helperText={errorStock}
           />
 
           <TextField
@@ -242,6 +345,8 @@ if (medicamentoEditando) {
             type="number"
             fullWidth
             margin="normal"
+            error={Boolean(errorCategoria)}
+            helperText={errorCategoria}
           />
 
           <TextField
@@ -252,6 +357,8 @@ if (medicamentoEditando) {
             type="date"
             fullWidth
             margin="normal"
+            error={Boolean(errorFecha)}
+            helperText={errorFecha}
             slotProps={{
               inputLabel: {
                 shrink: true,
