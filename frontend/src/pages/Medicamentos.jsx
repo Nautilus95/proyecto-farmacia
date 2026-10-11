@@ -156,25 +156,27 @@ function Medicamentos() {
   // Guardar medicamento //
 
   const guardarMedicamento = async () => {
+    let hayErrores = false
 
     // Validar nombre obligatorio //
     if (!formulario.nombre.trim()) {
       setErrorNombre('El nombre del medicamento es obligatorio')
-      return
+      hayErrores = true
+    } else {
+      setErrorNombre('')
     }
-    setErrorNombre('')
 
-    //Validar precio mayor a cero //
+    // Validar precio mayor a cero //
     if (
       formulario.precio === '' ||
       !Number.isFinite(Number(formulario.precio)) ||
       Number(formulario.precio) <= 0
     ) {
       setErrorPrecio('El precio debe ser mayor que cero')
-      return
+      hayErrores = true
+    } else {
+      setErrorPrecio('')
     }
-
-    setErrorPrecio('')
 
     // Validar stock mayor o igual a cero //
     if (
@@ -183,26 +185,31 @@ function Medicamentos() {
       Number(formulario.stock) < 0
     ) {
       setErrorStock('El stock debe ser un número entero mayor o igual a cero')
-      return
+      hayErrores = true
+    } else {
+      setErrorStock('')
     }
-
-    setErrorStock('')
 
     // Validar categoría obligatoria //
     if (!formulario.categoria_id) {
       setErrorCategoria('Seleccionar una categoría')
-      return
+      hayErrores = true
+    } else {
+      setErrorCategoria('')
     }
-
-    setErrorCategoria('')
-
+    
     // Validar fecha de ingreso obligatoria //
     if (!formulario.fecha_ingreso) {
       setErrorFecha('La fecha de ingreso es obligatoria')
+      hayErrores = true
+    } else {
+      setErrorFecha('')
+    }
+
+    if (hayErrores) {
       return
     }
 
-    setErrorFecha('')
 
     if (medicamentoEditando) {
       const respuesta = await fetch(
