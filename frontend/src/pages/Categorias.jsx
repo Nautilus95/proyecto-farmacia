@@ -13,7 +13,9 @@ import {
   TableContainer,
   TableHead,
   TableRow,
-  Typography
+  Typography,
+  Box,
+  Stack,
 } from '@mui/material'
 
 function Categorias() {
@@ -39,15 +41,12 @@ function Categorias() {
   }, [])
 
   // Función para guardar una nueva categoría //
-
   const guardarCategoria = async () => {
     if (!nombre.trim()) {
       alert('El nombre de la categoría es obligatorio')
-
       return
     }
     // Comprobar si el nombre de la categoría cambió //
-
     if (
       categoriaEditando &&
       nombre.trim() === categoriaEditando.nombre
@@ -58,7 +57,6 @@ function Categorias() {
       setDialogoAbierto(false)
       return
     }
-    // ---------------------------------------------------- //
 
     const editando = categoriaEditando !== null
 
@@ -77,10 +75,6 @@ function Categorias() {
     })
 
     const datos = await respuesta.json()
-
-    console.log('Estado HTTP:', respuesta.status)
-    console.log('Respuesta del backend:', datos)
-
 
     if (!respuesta.ok) {
       setError(datos.error || 'Ocurrió un error al guardar la categoría')
@@ -105,7 +99,6 @@ function Categorias() {
   }
 
   // Función para cerrar el diálogo y limpiar el formulario //
-
   const cerrarDialogo = () => {
     setDialogoAbierto(false)
     setNombre('')
@@ -114,7 +107,6 @@ function Categorias() {
   }
 
   // Función para eliminar una categoría //
-
   const eliminarCategoria = async (id) => {
     const respuesta = await fetch(
       `http://127.0.0.1:5000/categorias/${id}`,
@@ -124,13 +116,11 @@ function Categorias() {
     )
 
     const datos = await respuesta.json()
-
     console.log(datos)
     setCategorias(categorias.filter((categoria) => categoria.id !== id))
   }
 
   // Función para editar una categoría //
-
   const editarCategoria = (categoria) => {
     setCategoriaEditando(categoria)
     setNombre(categoria.nombre)
@@ -138,53 +128,71 @@ function Categorias() {
   }
 
   return (
-    <div>
-      <Typography variant="h4" sx={{ p: 3 }}>
-        Categorías
-      </Typography>
-
-      <Button variant="contained" sx={{ ml: 3, mb: 2 }}
-        onClick={() => setDialogoAbierto(true)}
+    <Box sx={{ p: 3 }}>
+      <Box
+        sx={{
+          display: 'flex',
+          justifyContent: 'space-between',
+          alignItems: 'center',
+          mb: 3,
+        }}
       >
+        <Typography variant="h4" sx={{ fontWeight: 'bold', color: '#1a202c' }}>
+          Categorías
+        </Typography>
 
-        Nueva categoría
-      </Button>
+        <Button
+          variant="contained"
+          onClick={() => setDialogoAbierto(true)}
+          sx={{ textTransform: 'none', px: 3, py: 1, boxShadow: 2 }}
+        >
+          Nueva categoría
+        </Button>
+      </Box>
 
-      <TableContainer component={Paper} sx={{ mx: 3 }}>
+      <TableContainer component={Paper} sx={{ boxShadow: 2, borderRadius: 2 }}>
         <Table>
-          <TableHead>
+          <TableHead sx={{ backgroundColor: '#f8f9fa' }}>
             <TableRow>
-              <TableCell>ID</TableCell>
-              <TableCell>Nombre</TableCell>
-              <TableCell>Acciones</TableCell>
+              <TableCell sx={{ fontWeight: 'bold' }}>ID</TableCell>
+              <TableCell sx={{ fontWeight: 'bold' }}>Nombre</TableCell>
+              <TableCell sx={{ fontWeight: 'bold' }}>Acciones</TableCell>
             </TableRow>
           </TableHead>
 
           <TableBody>
             {categorias.map((categoria) => (
-              <TableRow key={categoria.id}>
+              <TableRow
+                key={categoria.id}
+                sx={{ '&:hover': { backgroundColor: '#f1f5f9' } }}
+              >
                 <TableCell>{categoria.id}</TableCell>
                 <TableCell>{categoria.nombre}</TableCell>
                 <TableCell>
-                  <Button
-                    variant="contained"
-                    sx={{ mr: 1 }}
-                    onClick={() => editarCategoria(categoria)}
-                  >
-                    Editar
-                  </Button>
-                  <Button
-                    variant="contained"
-                    color="error"
-                    onClick={() =>
-                      setDialogoEliminar({
-                        abierto: true,
-                        id: categoria.id,
-                      })
-                    }
-                  >
-                    Eliminar
-                  </Button>
+                  <Stack direction="row" spacing={1}>
+                    <Button
+                      variant="outlined"
+                      size="small"
+                      onClick={() => editarCategoria(categoria)}
+                      sx={{ textTransform: 'none' }}
+                    >
+                      Editar
+                    </Button>
+                    <Button
+                      variant="outlined"
+                      color="error"
+                      size="small"
+                      onClick={() =>
+                        setDialogoEliminar({
+                          abierto: true,
+                          id: categoria.id,
+                        })
+                      }
+                      sx={{ textTransform: 'none' }}
+                    >
+                      Eliminar
+                    </Button>
+                  </Stack>
                 </TableCell>
               </TableRow>
             ))}
@@ -198,21 +206,19 @@ function Categorias() {
           setDialogoEliminar({ abierto: false, id: null })
         }
       >
-        <DialogTitle>Eliminar categoría</DialogTitle>
-
+        <DialogTitle sx={{ fontWeight: 'bold' }}>Eliminar categoría</DialogTitle>
         <DialogContent>
           ¿Estás seguro de que querés eliminar esta categoría?
         </DialogContent>
-
-        <DialogActions>
+        <DialogActions sx={{ p: 2 }}>
           <Button
             onClick={() =>
               setDialogoEliminar({ abierto: false, id: null })
             }
+            sx={{ textTransform: 'none' }}
           >
             Cancelar
           </Button>
-
           <Button
             color="error"
             variant="contained"
@@ -221,6 +227,7 @@ function Categorias() {
               setDialogoEliminar({ abierto: false, id: null })
               await eliminarCategoria(id)
             }}
+            sx={{ textTransform: 'none' }}
           >
             Eliminar
           </Button>
@@ -229,9 +236,11 @@ function Categorias() {
 
       <Dialog
         open={dialogoAbierto}
-        onClose={() => setDialogoAbierto(false)}
+        onClose={cerrarDialogo}
+        fullWidth
+        maxWidth="sm"
       >
-        <DialogTitle>
+        <DialogTitle sx={{ fontWeight: 'bold' }}>
           {categoriaEditando
             ? `Editar "${categoriaEditando.nombre}"`
             : 'Nueva categoría'}
@@ -252,19 +261,20 @@ function Categorias() {
           />
         </DialogContent>
 
-        <DialogActions>
-          <Button onClick={cerrarDialogo}>
+        <DialogActions sx={{ p: 2 }}>
+          <Button onClick={cerrarDialogo} sx={{ textTransform: 'none' }}>
             Cancelar
           </Button>
-
-          <Button variant="contained"
+          <Button
+            variant="contained"
             onClick={guardarCategoria}
+            sx={{ textTransform: 'none' }}
           >
             Guardar
           </Button>
         </DialogActions>
       </Dialog>
-    </div>
+    </Box>
   )
 }
 

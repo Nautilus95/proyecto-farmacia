@@ -15,6 +15,8 @@ import {
   TableRow,
   TextField,
   Typography,
+  Box,
+  Stack,
 } from '@mui/material'
 
 function Empleados() {
@@ -59,8 +61,8 @@ function Empleados() {
     setErrores({})
     setDialogoAbierto(true)
   }
-  // Confirmar eliminar empleado //
 
+  // Confirmar eliminar empleado //
   const eliminarEmpleado = async (id) => {
     try {
       const respuesta = await fetch(
@@ -83,7 +85,6 @@ function Empleados() {
       alert('No se pudo conectar con el servidor')
     }
   }
-
 
   // Función para cargar empleado //
   const cargarEmpleados = () => {
@@ -168,45 +169,59 @@ function Empleados() {
   }
 
   return (
-    <div>
-      <Typography variant="h4" sx={{ p: 3 }}>
-        Empleados
-      </Typography>
-      <Button
-        variant="contained"
-        onClick={() => {
-          setFormulario({
-            nombre: '',
-            apellido: '',
-            dni: '',
-            email: '',
-            cargo: '',
-          })
-          setEmpleadoEditando(null)
-          setErrores({})
-          setDialogoAbierto(true)
+    <Box sx={{ p: 3 }}>
+      <Box
+        sx={{
+          display: 'flex',
+          justifyContent: 'space-between',
+          alignItems: 'center',
+          mb: 3,
         }}
       >
-        Nuevo empleado
-      </Button>
+        <Typography variant="h4" sx={{ fontWeight: 'bold', color: '#1a202c' }}>
+          Empleados
+        </Typography>
 
-      <TableContainer component={Paper} sx={{ mx: 3 }}>
+        <Button
+          variant="contained"
+          onClick={() => {
+            setFormulario({
+              nombre: '',
+              apellido: '',
+              dni: '',
+              email: '',
+              cargo: '',
+            })
+            setEmpleadoEditando(null)
+            setErrores({})
+            setDialogoAbierto(true)
+          }}
+          sx={{ textTransform: 'none', px: 3, py: 1, boxShadow: 2 }}
+        >
+          Nuevo empleado
+        </Button>
+      </Box>
+
+      <TableContainer component={Paper} sx={{ boxShadow: 2, borderRadius: 2 }}>
         <Table>
-          <TableHead>
+          <TableHead sx={{ backgroundColor: '#f8f9fa' }}>
             <TableRow>
-              <TableCell>ID</TableCell>
-              <TableCell>Nombre</TableCell>
-              <TableCell>Apellido</TableCell>
-              <TableCell>DNI</TableCell>
-              <TableCell>Email</TableCell>
-              <TableCell>Cargo</TableCell>
-              <TableCell>Acciones</TableCell>
+              <TableCell sx={{ fontWeight: 'bold' }}>ID</TableCell>
+              <TableCell sx={{ fontWeight: 'bold' }}>Nombre</TableCell>
+              <TableCell sx={{ fontWeight: 'bold' }}>Apellido</TableCell>
+              <TableCell sx={{ fontWeight: 'bold' }}>DNI</TableCell>
+              <TableCell sx={{ fontWeight: 'bold' }}>Email</TableCell>
+              <TableCell sx={{ fontWeight: 'bold' }}>Cargo</TableCell>
+              <TableCell sx={{ fontWeight: 'bold' }}>Acciones</TableCell>
             </TableRow>
           </TableHead>
 
           <TableBody>
             {empleados.map((empleado) => (
-              <TableRow key={empleado.id}>
+              <TableRow
+                key={empleado.id}
+                sx={{ '&:hover': { backgroundColor: '#f1f5f9' } }}
+              >
                 <TableCell>{empleado.id}</TableCell>
                 <TableCell>{empleado.nombre}</TableCell>
                 <TableCell>{empleado.apellido}</TableCell>
@@ -214,29 +229,31 @@ function Empleados() {
                 <TableCell>{empleado.email}</TableCell>
                 <TableCell>{empleado.cargo}</TableCell>
                 <TableCell>
-                  <Button
-                    variant="outlined"
-                    size="small"
-                    onClick={() => editarEmpleado(empleado)}
-                  >
-                    Editar
-                  </Button>
+                  <Stack direction="row" spacing={1}>
+                    <Button
+                      variant="outlined"
+                      size="small"
+                      onClick={() => editarEmpleado(empleado)}
+                      sx={{ textTransform: 'none' }}
+                    >
+                      Editar
+                    </Button>
 
-                  <Button
-                    variant="contained"
-                    color="error"
-                    size="small"
-                    sx={{ ml: 1 }}
-                    onClick={() =>
-                      setDialogoEliminar({
-                        abierto: true,
-                        id: empleado.id,
-                      })
-                    }
-                  >
-                    Eliminar
-                  </Button>
-
+                    <Button
+                      variant="outlined"
+                      color="error"
+                      size="small"
+                      onClick={() =>
+                        setDialogoEliminar({
+                          abierto: true,
+                          id: empleado.id,
+                        })
+                      }
+                      sx={{ textTransform: 'none' }}
+                    >
+                      Eliminar
+                    </Button>
+                  </Stack>
                 </TableCell>
               </TableRow>
             ))}
@@ -250,17 +267,16 @@ function Empleados() {
           setDialogoEliminar({ abierto: false, id: null })
         }
       >
-        <DialogTitle>Eliminar empleado</DialogTitle>
-
+        <DialogTitle sx={{ fontWeight: 'bold' }}>Eliminar empleado</DialogTitle>
         <DialogContent>
           ¿Estás seguro de eliminar este empleado?
         </DialogContent>
-
-        <DialogActions>
+        <DialogActions sx={{ p: 2 }}>
           <Button
             onClick={() =>
               setDialogoEliminar({ abierto: false, id: null })
             }
+            sx={{ textTransform: 'none' }}
           >
             Cancelar
           </Button>
@@ -273,6 +289,7 @@ function Empleados() {
               setDialogoEliminar({ abierto: false, id: null })
               eliminarEmpleado(id)
             }}
+            sx={{ textTransform: 'none' }}
           >
             Eliminar
           </Button>
@@ -285,8 +302,8 @@ function Empleados() {
         fullWidth
         maxWidth="sm"
       >
-        <DialogTitle>{empleadoEditando ? 'Editar empleado' : 'Nuevo empleado'}
-
+        <DialogTitle sx={{ fontWeight: 'bold' }}>
+          {empleadoEditando ? 'Editar empleado' : 'Nuevo empleado'}
         </DialogTitle>
 
         <DialogContent>
@@ -353,17 +370,21 @@ function Empleados() {
           </TextField>
         </DialogContent>
 
-        <DialogActions>
-          <Button onClick={() => setDialogoAbierto(false)}>
+        <DialogActions sx={{ p: 2 }}>
+          <Button onClick={() => setDialogoAbierto(false)} sx={{ textTransform: 'none' }}>
             Cancelar
           </Button>
 
-          <Button variant="contained" onClick={guardarEmpleado}>
+          <Button
+            variant="contained"
+            onClick={guardarEmpleado}
+            sx={{ textTransform: 'none' }}
+          >
             Guardar
           </Button>
         </DialogActions>
       </Dialog>
-    </div>
+    </Box>
   )
 }
 

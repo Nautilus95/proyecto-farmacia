@@ -15,6 +15,8 @@ import {
   TableRow,
   TextField,
   Typography,
+  Box,
+  Stack,
 } from '@mui/material'
 
 function Medicamentos() {
@@ -54,7 +56,6 @@ function Medicamentos() {
   const cargarCategorias = async () => {
     const respuesta = await fetch('http://127.0.0.1:5000/categorias')
     const datos = await respuesta.json()
-
     setCategorias(datos)
   }
 
@@ -100,7 +101,6 @@ function Medicamentos() {
   // Función para cerrar el diálogo y limpiar el formulario
   const cerrarDialogo = () => {
     setDialogoAbierto(false)
-
     setErrorNombre('')
     setErrorPrecio('')
     setErrorStock('')
@@ -109,7 +109,6 @@ function Medicamentos() {
   }
 
   // Eliminar medicamento //
-
   const eliminarMedicamento = async (id) => {
     const respuesta = await fetch(
       `http://127.0.0.1:5000/medicamentos/${id}`,
@@ -119,7 +118,6 @@ function Medicamentos() {
     )
 
     const datos = await respuesta.json()
-
     console.log(datos)
     cargarMedicamentos()
   }
@@ -132,33 +130,17 @@ function Medicamentos() {
       [name]: value,
     })
 
-    if (name === 'nombre') {
-      setErrorNombre('')
-    }
-
-    if (name === 'precio') {
-      setErrorPrecio('')
-    }
-
-    if (name === 'stock') {
-      setErrorStock('')
-    }
-
-    if (name === 'categoria_id') {
-      setErrorCategoria('')
-    }
-
-    if (name === 'fecha_ingreso') {
-      setErrorFecha('')
-    }
+    if (name === 'nombre') setErrorNombre('')
+    if (name === 'precio') setErrorPrecio('')
+    if (name === 'stock') setErrorStock('')
+    if (name === 'categoria_id') setErrorCategoria('')
+    if (name === 'fecha_ingreso') setErrorFecha('')
   }
 
   // Guardar medicamento //
-
   const guardarMedicamento = async () => {
     let hayErrores = false
 
-    // Validar nombre obligatorio //
     if (!formulario.nombre.trim()) {
       setErrorNombre('El nombre del medicamento es obligatorio')
       hayErrores = true
@@ -166,7 +148,6 @@ function Medicamentos() {
       setErrorNombre('')
     }
 
-    // Validar precio mayor a cero //
     if (
       formulario.precio === '' ||
       !Number.isFinite(Number(formulario.precio)) ||
@@ -178,7 +159,6 @@ function Medicamentos() {
       setErrorPrecio('')
     }
 
-    // Validar stock mayor o igual a cero //
     if (
       formulario.stock === '' ||
       !Number.isInteger(Number(formulario.stock)) ||
@@ -190,7 +170,6 @@ function Medicamentos() {
       setErrorStock('')
     }
 
-    // Validar categoría obligatoria //
     if (!formulario.categoria_id) {
       setErrorCategoria('Seleccionar una categoría')
       hayErrores = true
@@ -198,7 +177,6 @@ function Medicamentos() {
       setErrorCategoria('')
     }
     
-    // Validar fecha de ingreso obligatoria //
     if (!formulario.fecha_ingreso) {
       setErrorFecha('La fecha de ingreso es obligatoria')
       hayErrores = true
@@ -209,7 +187,6 @@ function Medicamentos() {
     if (hayErrores) {
       return
     }
-
 
     if (medicamentoEditando) {
       const respuesta = await fetch(
@@ -224,7 +201,6 @@ function Medicamentos() {
       )
 
       const datos = await respuesta.json()
-
       console.log(datos)
       cargarMedicamentos()
       cerrarDialogo()
@@ -240,82 +216,91 @@ function Medicamentos() {
     })
 
     const datos = await respuesta.json()
-
     console.log(datos)
     cargarMedicamentos()
     cerrarDialogo()
   }
 
   return (
-    <div style={{ padding: '32px' }}>
-      <div
-        style={{
+    <Box sx={{ p: 3 }}>
+      <Box
+        sx={{
           display: 'flex',
           justifyContent: 'space-between',
           alignItems: 'center',
-          marginBottom: '24px',
+          mb: 3,
         }}
       >
-        <Typography variant="h4">
+        <Typography variant="h4" sx={{ fontWeight: 'bold', color: '#1a202c' }}>
           Medicamentos
         </Typography>
 
-        <Button variant="contained" onClick={abrirDialogo}>
+        <Button
+          variant="contained"
+          onClick={abrirDialogo}
+          sx={{ textTransform: 'none', px: 3, py: 1, boxShadow: 2 }}
+        >
           Nuevo medicamento
         </Button>
-      </div>
+      </Box>
 
-      <TableContainer component={Paper}>
+      <TableContainer component={Paper} sx={{ boxShadow: 2, borderRadius: 2 }}>
         <Table>
-          <TableHead>
+          <TableHead sx={{ backgroundColor: '#f8f9fa' }}>
             <TableRow>
-              <TableCell>ID</TableCell>
-              <TableCell>Nombre</TableCell>
-              <TableCell>Precio</TableCell>
-              <TableCell>Stock</TableCell>
-              <TableCell>Categoría</TableCell>
-              <TableCell>Fecha de ingreso</TableCell>
-              <TableCell>Acciones</TableCell>
+              <TableCell sx={{ fontWeight: 'bold' }}>ID</TableCell>
+              <TableCell sx={{ fontWeight: 'bold' }}>Nombre</TableCell>
+              <TableCell sx={{ fontWeight: 'bold' }}>Precio</TableCell>
+              <TableCell sx={{ fontWeight: 'bold' }}>Stock</TableCell>
+              <TableCell sx={{ fontWeight: 'bold' }}>Categoría</TableCell>
+              <TableCell sx={{ fontWeight: 'bold' }}>Fecha de ingreso</TableCell>
+              <TableCell sx={{ fontWeight: 'bold' }}>Acciones</TableCell>
             </TableRow>
           </TableHead>
 
           <TableBody>
             {medicamentos.map((medicamento) => (
-              <TableRow key={medicamento.id}>
+              <TableRow
+                key={medicamento.id}
+                sx={{ '&:hover': { backgroundColor: '#f1f5f9' } }}
+              >
                 <TableCell>{medicamento.id}</TableCell>
                 <TableCell>{medicamento.nombre}</TableCell>
                 <TableCell>${medicamento.precio}</TableCell>
                 <TableCell>{medicamento.stock}</TableCell>
-                <TableCell>{categorias.find(
-                  (categoria) =>
-                    Number(categoria.id) === Number(medicamento.categoria_id)
-                )?.nombre || 'Sin categoría'}
+                <TableCell>
+                  {categorias.find(
+                    (categoria) =>
+                      Number(categoria.id) === Number(medicamento.categoria_id)
+                  )?.nombre || 'Sin categoría'}
                 </TableCell>
                 <TableCell>{medicamento.fecha_ingreso}</TableCell>
                 <TableCell>
-                  <Button
-                    variant="outlined"
-                    onClick={() => {
-                      editarMedicamento(medicamento)
-                    }}
+                  <Stack direction="row" spacing={1}>
+                    <Button
+                      variant="outlined"
+                      size="small"
+                      onClick={() => editarMedicamento(medicamento)}
+                      sx={{ textTransform: 'none' }}
+                    >
+                      Editar
+                    </Button>
 
-                  >
-                    Editar
-                  </Button>
-
-                  <Button
-                    variant="outlined"
-                    color="error"
-                    onClick={() =>
-                      setDialogoEliminar({
-                        abierto: true,
-                        id: medicamento.id,
-                      })
-                    }
-                  >
-                    Eliminar
-                  </Button>
-
+                    <Button
+                      variant="outlined"
+                      color="error"
+                      size="small"
+                      onClick={() =>
+                        setDialogoEliminar({
+                          abierto: true,
+                          id: medicamento.id,
+                        })
+                      }
+                      sx={{ textTransform: 'none' }}
+                    >
+                      Eliminar
+                    </Button>
+                  </Stack>
                 </TableCell>
               </TableRow>
             ))}
@@ -329,17 +314,16 @@ function Medicamentos() {
           setDialogoEliminar({ abierto: false, id: null })
         }
       >
-        <DialogTitle>Eliminar medicamento</DialogTitle>
-
+        <DialogTitle sx={{ fontWeight: 'bold' }}>Eliminar medicamento</DialogTitle>
         <DialogContent>
           ¿Estás seguro de eliminar el medicamento?
         </DialogContent>
-
-        <DialogActions>
+        <DialogActions sx={{ p: 2 }}>
           <Button
             onClick={() =>
               setDialogoEliminar({ abierto: false, id: null })
             }
+            sx={{ textTransform: 'none' }}
           >
             Cancelar
           </Button>
@@ -352,12 +336,12 @@ function Medicamentos() {
               setDialogoEliminar({ abierto: false, id: null })
               eliminarMedicamento(id)
             }}
+            sx={{ textTransform: 'none' }}
           >
             Eliminar
           </Button>
         </DialogActions>
       </Dialog>
-
 
       <Dialog
         open={dialogoAbierto}
@@ -365,7 +349,9 @@ function Medicamentos() {
         fullWidth
         maxWidth="sm"
       >
-        <DialogTitle>Nuevo medicamento</DialogTitle>
+        <DialogTitle sx={{ fontWeight: 'bold' }}>
+          {medicamentoEditando ? 'Editar medicamento' : 'Nuevo medicamento'}
+        </DialogTitle>
 
         <DialogContent>
           <TextField
@@ -378,7 +364,6 @@ function Medicamentos() {
             error={Boolean(errorNombre)}
             helperText={errorNombre}
           />
-
 
           <TextField
             label="Precio"
@@ -440,17 +425,21 @@ function Medicamentos() {
           />
         </DialogContent>
 
-        <DialogActions>
-          <Button onClick={cerrarDialogo}>
+        <DialogActions sx={{ p: 2 }}>
+          <Button onClick={cerrarDialogo} sx={{ textTransform: 'none' }}>
             Cancelar
           </Button>
 
-          <Button variant="contained" onClick={guardarMedicamento}>
+          <Button
+            variant="contained"
+            onClick={guardarMedicamento}
+            sx={{ textTransform: 'none' }}
+          >
             Guardar
           </Button>
         </DialogActions>
       </Dialog>
-    </div>
+    </Box>
   )
 }
 

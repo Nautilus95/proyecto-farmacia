@@ -52,33 +52,47 @@ function Layout() {
           '& .MuiDrawer-paper': {
             width: drawerWidth,
             boxSizing: 'border-box',
+            backgroundColor: '#0f172a', // Azul oscuro elegante
+            color: '#f8fafc',
+            borderRight: 'none',
           },
         }}
       >
-        <Toolbar>
-          <Typography variant="h6" component="div">
-            Farmacia
+        <Toolbar sx={{ my: 1 }}>
+          <Typography variant="h6" component="div" sx={{ fontWeight: 'bold', color: '#0284c7' }}>
+            💊 Farmacia
           </Typography>
         </Toolbar>
 
-        <List>
+        <List sx={{ px: 1 }}>
           {opciones.map((opcion) => (
-            <ListItem key={opcion.ruta} disablePadding>
+            <ListItem key={opcion.ruta} disablePadding sx={{ mb: 0.5 }}>
               <ListItemButton
                 component={NavLink}
                 to={opcion.ruta}
                 sx={{
+                  borderRadius: 2,
+                  color: '#94a3b8',
                   '&.active': {
-                    backgroundColor: '#e3f2fd',
-                    fontWeight: 'bold',
+                    backgroundColor: '#0284c7',
+                    color: '#ffffff',
+                    '& .MuiListItemIcon-root': {
+                      color: '#ffffff',
+                    },
+                  },
+                  '&:hover': {
+                    backgroundColor: 'rgba(255, 255, 255, 0.08)',
                   },
                 }}
               >
-                <ListItemIcon>
+                <ListItemIcon sx={{ color: '#94a3b8', minWidth: 40 }}>
                   {opcion.icono}
                 </ListItemIcon>
 
-                <ListItemText primary={opcion.texto} />
+                <ListItemText
+                  primary={opcion.texto}
+                  primaryTypographyProps={{ fontSize: '0.95rem', fontWeight: 500 }}
+                />
               </ListItemButton>
             </ListItem>
           ))}
@@ -90,7 +104,7 @@ function Layout() {
         sx={{
           flexGrow: 1,
           minHeight: '100vh',
-          backgroundColor: '#f5f6fa',
+          backgroundColor: '#f8fafc',
         }}
       >
         <Outlet />

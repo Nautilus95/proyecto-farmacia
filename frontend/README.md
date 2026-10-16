@@ -1,16 +1,89 @@
-# React + Vite
+Sistema de Gestión de Farmacia (Frontend & Backend)
 
-This template provides a minimal setup to get React working in Vite with HMR and some Oxlint rules.
+Sistema web profesional desarrollado para la administración integral de una farmacia, enfocado en el control de inventario, categorización de productos y gestión de personal.
 
-Currently, two official plugins are available:
+🚀 Características Principales
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+Dashboard General: Resumen en tiempo real con métricas clave (total de medicamentos, categorías y empleados) con tarjetas visuales interactivas y diseño corporativo.
 
-## React Compiler
+Gestión de Medicamentos: Control CRUD completo (Crear, Leer, Actualizar, Eliminar) con validación estricta de campos, precios, stock y vinculación por categorías.
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+Gestión de Categorías: Clasificación ordenada de productos con interfaz optimizada.
 
-## Expanding the Oxlint configuration
+Gestión de Empleados: Administración del personal de la farmacia (DNI, email, cargos como Farmacéutico, Vendedor, etc.) con validaciones de formato.
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and Oxlint's TypeScript related rules in your project.
+Diseño UI/UX Profesional (Rama feature/diseno-visual):
+
+Paleta de colores institucional (Azul médico oscuro y acentos cian/verde).
+
+Menú lateral permanente estructurado.
+
+Tablas con efecto hover y botones de acción unificados.
+
+🛠️ Stack Tecnológico
+
+Frontend:
+
+React (con Vite)
+
+Material UI (MUI v6)
+
+React Router DOM
+
+Backend:
+
+Python / Flask
+
+Flask-SQLAlchemy (ORM)
+
+Base de Datos:
+
+MySQL
+
+⚙️ Configuración y Ejecución Local
+
+1. Backend (Flask)
+
+Asegúrate de tener Python instalado y los paquetes del servidor configurados.
+
+# Activar entorno virtual (si aplica) y correr el servidor Flask
+python app.py
+
+
+(El servidor backend corre por defecto en http://127.0.0.1:5000)
+
+2. Frontend (React)
+
+# Instalar dependencias
+npm install
+
+# Iniciar servidor de desarrollo con Vite
+npm run dev
+
+
+(El frontend se abrirá habitualmente en http://localhost:5173)
+
+📂 Estructura del Proyecto (Frontend)
+
+src/
+│
+├── components/
+│   └── Layout.jsx       # Menú lateral oscuro fijo y estructura general
+├── pages/
+│   ├── Dashboard.jsx    # Tarjetas métricas y resumen general
+│   ├── Medicamentos.jsx # CRUD de medicamentos y validaciones
+│   ├── Categorias.jsx   # CRUD de categorías
+│   └── Empleados.jsx    # CRUD de empleados y validaciones
+│
+├── App.jsx              # Configuración de rutas principales
+├── main.jsx             # Proveedor de temas (ThemeProvider) de MUI y estilos base
+└── index.css            # Estilos globales
+
+
+💡 Mejoras Visuales Recientes (feature/diseno-visual)
+
+Unificación de la paleta de colores corporativa a través de createTheme en Material UI.
+
+Estandarización de tablas con filas interactivas (hover) y botones compactos alineados mediante <Stack>.
+
+Preservación del 100% de la lógica de negocio, endpoints REST del backend, estados y validaciones de formularios existentes.
