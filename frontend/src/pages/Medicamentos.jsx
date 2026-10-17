@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import {
   Button,
   Dialog,
@@ -17,7 +17,10 @@ import {
   Typography,
   Box,
   Stack,
+  InputAdornment
 } from '@mui/material'
+import CalendarMonthIcon from '@mui/icons-material/CalendarMonth'
+import { IconButton } from '@mui/material'
 
 function Medicamentos() {
   const [medicamentos, setMedicamentos] = useState([])
@@ -33,6 +36,7 @@ function Medicamentos() {
     abierto: false,
     id: null,
   })
+  const fechaIngresoRef = useRef(null)
 
   const [formulario, setFormulario] = useState({
     nombre: '',
@@ -176,7 +180,7 @@ function Medicamentos() {
     } else {
       setErrorCategoria('')
     }
-    
+
     if (!formulario.fecha_ingreso) {
       setErrorFecha('La fecha de ingreso es obligatoria')
       hayErrores = true
@@ -314,16 +318,49 @@ function Medicamentos() {
           setDialogoEliminar({ abierto: false, id: null })
         }
       >
-        <DialogTitle sx={{ fontWeight: 'bold' }}>Eliminar medicamento</DialogTitle>
-        <DialogContent>
-          ¿Estás seguro de eliminar el medicamento?
+
+        <DialogTitle
+          sx={{
+            fontWeight: 700,
+            fontSize: '1.25rem',
+            color: '#1e293b',
+            pb: 1,
+          }}
+        >
+          Eliminar medicamento
+        </DialogTitle>
+
+        <DialogContent sx={{ pt: '12px !important', pb: 2 }}>
+          <Typography sx={{ color: '#0e1724', fontSize: '1rem' }}>
+            ¿Estás seguro de eliminar el medicamento?
+          </Typography>
         </DialogContent>
-        <DialogActions sx={{ p: 2 }}>
+
+        <DialogActions
+          sx={{
+            px: 3,
+            pb: 2.5,
+            pt: 1,
+            gap: 1,
+          }}
+        >
           <Button
             onClick={() =>
               setDialogoEliminar({ abierto: false, id: null })
             }
-            sx={{ textTransform: 'none' }}
+            variant="outlined"
+            sx={{
+              textTransform: 'none',
+              borderRadius: 2,
+              px: 2.5,
+              color: '#475569',
+              borderColor: '#cbd5e1',
+              fontWeight: 600,
+              '&:hover': {
+                borderColor: '#94a3b8',
+                backgroundColor: '#f8fafc',
+              },
+            }}
           >
             Cancelar
           </Button>
@@ -336,11 +373,22 @@ function Medicamentos() {
               setDialogoEliminar({ abierto: false, id: null })
               eliminarMedicamento(id)
             }}
-            sx={{ textTransform: 'none' }}
+            sx={{
+              textTransform: 'none',
+              borderRadius: 2,
+              px: 2.5,
+              fontWeight: 600,
+              boxShadow: 'none',
+              '&:hover': {
+                boxShadow: 'none',
+                backgroundColor: '#b91c1c',
+              },
+            }}
           >
             Eliminar
           </Button>
         </DialogActions>
+
       </Dialog>
 
       <Dialog
@@ -349,7 +397,14 @@ function Medicamentos() {
         fullWidth
         maxWidth="sm"
       >
-        <DialogTitle sx={{ fontWeight: 'bold' }}>
+        <DialogTitle
+          sx={{
+            fontWeight: 700,
+            fontSize: '1.25rem',
+            color: '#1e293b',
+            pb: 1,
+          }}
+        >
           {medicamentoEditando ? 'Editar medicamento' : 'Nuevo medicamento'}
         </DialogTitle>
 
@@ -410,6 +465,7 @@ function Medicamentos() {
           <TextField
             label="Fecha de ingreso"
             name="fecha_ingreso"
+            inputRef={fechaIngresoRef}
             value={formulario.fecha_ingreso}
             onChange={manejarCambio}
             type="date"
@@ -420,6 +476,20 @@ function Medicamentos() {
             slotProps={{
               inputLabel: {
                 shrink: true,
+              },
+              input: {
+                endAdornment: (
+                  <InputAdornment position="end">
+                    <IconButton
+                      aria-label="Abrir calendario"
+                      onClick={() => fechaIngresoRef.current?.showPicker?.()}
+                      edge="end"
+                      size="small"
+                    >
+                      <CalendarMonthIcon sx={{ color: '#475569' }} />
+                    </IconButton>
+                  </InputAdornment>
+                ),
               },
             }}
           />

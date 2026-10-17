@@ -267,16 +267,45 @@ function Empleados() {
           setDialogoEliminar({ abierto: false, id: null })
         }
       >
-        <DialogTitle sx={{ fontWeight: 'bold' }}>Eliminar empleado</DialogTitle>
-        <DialogContent>
-          ¿Estás seguro de eliminar este empleado?
+
+        <DialogTitle
+          sx={{
+            fontWeight: 700,
+            fontSize: '1.25rem',
+            color: '#1e293b',
+            pb: 1,
+          }}
+        >
+          Eliminar empleado
+        </DialogTitle>
+
+        <DialogContent sx={{ pt: '12px !important', pb: 2 }}>
+          <Typography sx={{ color: '#334155', fontSize: '1rem' }}>
+            ¿Estás seguro de eliminar a este empleado?
+          </Typography>
         </DialogContent>
-        <DialogActions sx={{ p: 2 }}>
+
+
+        <DialogActions
+          sx={{
+            px: 3,
+            pb: 2.5,
+            pt: 1,
+            gap: 1,
+          }}
+        >
           <Button
             onClick={() =>
               setDialogoEliminar({ abierto: false, id: null })
             }
-            sx={{ textTransform: 'none' }}
+            variant="outlined"
+            sx={{
+              textTransform: 'none',
+              borderRadius: 2,
+              px: 2.5,
+              color: '#475569',
+              borderColor: '#cbd5e1',
+            }}
           >
             Cancelar
           </Button>
@@ -289,11 +318,22 @@ function Empleados() {
               setDialogoEliminar({ abierto: false, id: null })
               eliminarEmpleado(id)
             }}
-            sx={{ textTransform: 'none' }}
+            sx={{
+              textTransform: 'none',
+              borderRadius: 2,
+              px: 2.5,
+              fontWeight: 600,
+              boxShadow: 'none',
+              '&:hover': {
+                boxShadow: 'none',
+                backgroundColor: '#b91c1c',
+              },
+            }}
           >
             Eliminar
           </Button>
         </DialogActions>
+
       </Dialog>
 
       <Dialog
@@ -302,9 +342,18 @@ function Empleados() {
         fullWidth
         maxWidth="sm"
       >
-        <DialogTitle sx={{ fontWeight: 'bold' }}>
+
+        <DialogTitle
+          sx={{
+            fontWeight: 700,
+            fontSize: '1.25rem',
+            color: '#1e293b',
+            pb: 1,
+          }}
+        >
           {empleadoEditando ? 'Editar empleado' : 'Nuevo empleado'}
         </DialogTitle>
+
 
         <DialogContent>
           <TextField

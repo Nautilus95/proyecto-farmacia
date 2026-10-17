@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { Box, Card, CardContent, Grid, Typography, Avatar } from '@mui/material'
+import { Box, Card, CardContent, Grid, Typography, Avatar, Divider } from '@mui/material'
 import MedicationIcon from '@mui/icons-material/Medication'
 import CategoryIcon from '@mui/icons-material/Category'
 import PeopleIcon from '@mui/icons-material/People'
@@ -44,16 +44,56 @@ function Dashboard() {
   ]
 
   return (
-    <Box sx={{ p: 3 }}>
-      <Typography variant="h4" component="h1" sx={{ fontWeight: 'bold', color: '#1a202c', mb: 0.5 }}>
-        Dashboard de Farmacia
-      </Typography>
+    <Box
+      sx={{
+        p: 3,
+        minHeight: '100vh',
+        display: 'flex',
+        flexDirection: 'column',
+        justifyContent: 'center',
+        boxSizing: 'border-box',
+      }}
+    >
+      <Box
+        sx={{
+          textAlign: 'center',
+          mb: 3,
+          transform: 'translateY(-45px)',
+        }}
+      >
+        <Typography
+          variant="h4"
+          component="h1"
+          sx={{
+            fontWeight: 'bold',
+            color: '#1a202c',
+            mb: 0.5,
+          }}
+        >
+          Centro de gestión
+        </Typography>
 
-      <Typography variant="body1" sx={{ color: 'text.secondary', mb: 4 }}>
-        Resumen general del sistema
-      </Typography>
+        <Typography
+          variant="body1"
+          sx={{ color: 'text.secondary' }}
+        >
+          Resumen general del sistema
+        </Typography>
 
-      <Grid container spacing={3}>
+        <Divider
+          sx={{
+            mt: 2,
+            borderColor: 'rgba(15, 23, 42, 0.18)',
+          }}
+        />
+      </Box>
+
+      <Grid
+        container
+        spacing={3}
+        justifyContent="center"
+        sx={{ maxWidth: 1100, mx: 'auto', width: '100%' }}
+      >
         {tarjetas.map((item, index) => (
           <Grid key={index} size={{ xs: 12, md: 4 }}>
             <Card

@@ -20,7 +20,7 @@ const theme = createTheme({
       dark: '#047857',
     },
     background: {
-      default: '#f8fafc', // Fondo neutro suave
+      default: 'rgb(204, 223, 243)',
       paper: '#ffffff',
     },
     text: {
@@ -38,6 +38,15 @@ const theme = createTheme({
       fontWeight: 600,
     },
   },
+  components: {
+    MuiInputBase: {
+      styleOverrides: {
+        input: {
+          caretColor: '#000000',
+        },
+      },
+    },
+  }
 })
 
 ReactDOM.createRoot(document.getElementById('root')).render(

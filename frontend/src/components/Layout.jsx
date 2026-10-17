@@ -15,6 +15,7 @@ import DashboardIcon from '@mui/icons-material/Dashboard'
 import MedicationIcon from '@mui/icons-material/Medication'
 import CategoryIcon from '@mui/icons-material/Category'
 import PeopleIcon from '@mui/icons-material/People'
+import TerrainIcon from '@mui/icons-material/Terrain'
 
 const drawerWidth = 240
 
@@ -58,11 +59,45 @@ function Layout() {
           },
         }}
       >
+
         <Toolbar sx={{ my: 1 }}>
-          <Typography variant="h6" component="div" sx={{ fontWeight: 'bold', color: '#0284c7' }}>
-            💊 Farmacia
-          </Typography>
+          <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.2 }}>
+            <TerrainIcon
+              sx={{
+                fontSize: 38,
+                color: '#0284c7',
+              }}
+            />
+
+            <Box sx={{ display: 'flex', flexDirection: 'column' }}>
+              <Typography
+                component="div"
+                sx={{
+                  fontWeight: 800,
+                  fontSize: '1.05rem',
+                  color: '#0284c7',
+                  lineHeight: 1.2,
+                  letterSpacing: 0.5,
+                }}
+              >
+                GRUPO ANDINO
+              </Typography>
+
+              <Typography
+                component="div"
+                sx={{
+                  fontSize: '0.65rem',
+                  color: '#94a3b8',
+                  letterSpacing: 1,
+                  mt: 0.5,
+                }}
+              >
+                CADENA DE FARMACIAS
+              </Typography>
+            </Box>
+          </Box>
         </Toolbar>
+
 
         <List sx={{ px: 1 }}>
           {opciones.map((opcion) => (
@@ -104,7 +139,7 @@ function Layout() {
         sx={{
           flexGrow: 1,
           minHeight: '100vh',
-          backgroundColor: '#f8fafc',
+          backgroundColor: 'rgb(204, 223, 243)',
         }}
       >
         <Outlet />
